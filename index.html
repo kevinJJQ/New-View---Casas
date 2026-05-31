@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New View — Propiedades La Paz</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #0d1f17;
+  --dark: #071209;
+  --brown: #c9a84c;
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --muted: #a89060;
+  --border: #2a3d2e;
+  --white: #122318;
+  --card-bg: #0f1e15;
+  --red: #c0392b;
+  --text: #d4c9a8;
+  --text-soft: #8a9e8a;
+  --radius: 4px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.hero {
+  background: var(--dark);
+  padding: 3rem 2rem 2.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg, transparent, transparent 40px,
+    rgba(201,168,76,0.03) 40px, rgba(201,168,76,0.03) 41px
+  );
+}
+.hero-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  color: #f0e8d0;
+  line-height: 1.1;
+  margin-bottom: 0.75rem;
+}
+.hero h1 span { color: var(--gold); }
+.hero p {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.45);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+.price-badge {
+  display: inline-block;
+  margin-top: 1.5rem;
+  background: rgba(201,168,76,0.12);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold-light);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  padding: 0.4rem 1rem;
+  border-radius: 2px;
+}
+
+/* ── COUNTER BAR ── */
+.counter-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--dark);
+  border-bottom: 2px solid var(--gold);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.counter-bar.hidden { display: none; }
+.counter-info { display: flex; align-items: center; gap: 1rem; }
+.counter-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: var(--gold);
+  font-weight: 700;
+}
+.counter-text {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.4;
+}
+.counter-total {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--gold-light);
+  letter-spacing: 0.05em;
+}
+.counter-clear {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.5);
+  font-size: 0.72rem;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.1em;
+  padding: 0.3rem 0.75rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: border-color 0.15s, color 0.15s;
+}
+.counter-clear:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ── MAIN ── */
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 0.4rem;
+}
+.section-sub {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  margin-bottom: 2rem;
+}
+
+/* ── GRID CASAS ── */
+.houses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+.house-card {
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  position: relative;
+  user-select: none;
+}
+.house-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.house-card.selected {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.2);
+}
+.house-card.selected .check-badge { opacity: 1; transform: scale(1); }
+.check-badge {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 26px; height: 26px;
+  background: var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 2;
+}
+.check-badge svg { width: 14px; height: 14px; stroke: #0d1f17; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.house-img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+  background: #1a2e20;
+}
+.house-info { padding: 0.75rem; }
+.house-zone {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+.house-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e8dcc0;
+  margin-bottom: 0.2rem;
+}
+.house-price { font-size: 0.8rem; color: var(--text-soft); }
+.house-price strong { color: var(--gold); }
+
+/* ── FORM ── */
+.form-section {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+.form-section h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  color: var(--gold);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 580px) { .form-grid { grid-template-columns: 1fr; } }
+.form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+.form-group.full { grid-column: 1 / -1; }
+label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+label span { color: var(--gold); }
+input, select {
+  background: var(--dark);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  padding: 0.65rem 0.85rem;
+  outline: none;
+  transition: border-color 0.15s;
+  -webkit-appearance: none;
+}
+input::placeholder { color: #4a6450; }
+input:focus, select:focus { border-color: var(--gold); }
+input.error { border-color: var(--red); }
+.err { font-size: 0.72rem; color: var(--red); display: none; }
+.err.show { display: block; }
+.phone-row { display: flex; gap: 0.5rem; }
+.phone-row select { width: 140px; flex-shrink: 0; }
+.phone-row input { flex: 1; }
+select option { background: #0d1f17; color: var(--text); }
+
+/* ── RESUMEN ── */
+.selected-summary {
+  background: var(--dark);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.selected-summary h4 {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+.selected-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.selected-tag {
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold-light);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 2px;
+}
+.total-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+.total-label { font-size: 0.8rem; color: var(--text-soft); }
+.total-amount {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+/* ── QR YAPE ── */
+.qr-section {
+  background: var(--dark);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.qr-section h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: var(--gold);
+  margin-bottom: 0.4rem;
+}
+.qr-section p { font-size: 0.82rem; color: var(--text-soft); margin-bottom: 1.25rem; }
+.qr-img {
+  width: 180px; height: 180px;
+  margin: 0 auto;
+  display: block;
+  border: 3px solid var(--border);
+  border-radius: var(--radius);
+}
+.yape-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  background: #6b21a8;
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
+}
+.qr-monto {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--gold-light);
+  font-weight: 600;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.05em;
+}
+
+/* ── SUBMIT ── */
+.submit-btn {
+  width: 100%;
+  background: var(--dark);
+  color: var(--gold);
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 1rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.submit-btn:hover:not(:disabled) { background: var(--gold); color: var(--dark); }
+.submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── SOPORTE ── */
+.support-box {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.support-box p { font-size: 0.82rem; color: var(--text-soft); }
+.support-box a { color: var(--gold); text-decoration: none; font-weight: 500; }
+.support-box a:hover { text-decoration: underline; }
+
+/* ── SUCCESS ── */
+.success-screen {
+  display: none;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+.success-screen.visible { display: block; }
+.form-main.hidden { display: none; }
+.check-big {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+.check-big svg { width: 32px; height: 32px; stroke: var(--gold); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.success-screen h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+}
+.success-screen p { font-size: 0.9rem; color: var(--text-soft); line-height: 1.7; max-width: 400px; margin: 0 auto 0.5rem; }
+.success-screen strong { color: var(--gold-light); }
+.reset-btn {
+  margin-top: 2rem;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-soft);
+  padding: 0.65rem 1.5rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: border-color 0.15s, color 0.15s;
+}
+.reset-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ── LOADING OVERLAY ── */
+.loading-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(7,18,9,0.85);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1rem;
+}
+.loading-overlay.visible { display: flex; }
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid rgba(201,168,76,0.2);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-overlay p {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <p>Enviando solicitud...</p>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">New View — La Paz, Bolivia</div>
+  <h1>Encuentra tu <span>propiedad</span><br>ideal en La Paz</h1>
+  <p>Selecciona las propiedades que te interesan, realiza tu pago y recibe toda la información de contacto.</p>
+  <div class="price-badge">Bs. 5 por propiedad</div>
+</div>
+
+<!-- COUNTER BAR -->
+<div class="counter-bar hidden" id="counterBar">
+  <div class="counter-info">
+    <div class="counter-num" id="counterNum">0</div>
+    <div class="counter-text">propiedades<br>seleccionadas</div>
+  </div>
+  <div class="counter-total" id="counterTotal">Total: Bs. 0</div>
+  <button class="counter-clear" onclick="clearAll()">Limpiar</button>
+</div>
+
+<div class="main">
+  <div class="form-main" id="formMain">
+
+    <!-- GRID DE CASAS -->
+    <div class="section-title">Propiedades disponibles</div>
+    <p class="section-sub">Selecciona una o más propiedades para conocer su información detallada</p>
+    <div class="houses-grid" id="housesGrid"></div>
+
+    <!-- FORMULARIO -->
+    <div class="form-section" id="formSection">
+      <h3>Tus datos de contacto</h3>
+
+      <!-- Resumen selección -->
+      <div class="selected-summary" id="selectedSummary" style="display:none">
+        <h4>Propiedades seleccionadas</h4>
+        <div class="selected-tags" id="selectedTags"></div>
+        <div class="total-line">
+          <span class="total-label">Total a pagar</span>
+          <span class="total-amount" id="totalAmount">Bs. 0</span>
+        </div>
+      </div>
+
+      <form id="mainForm" novalidate>
+        <div class="form-grid">
+          <div class="form-group full">
+            <label for="nombre">Nombre completo <span>*</span></label>
+            <input type="text" id="nombre" placeholder="Tu nombre completo">
+            <span class="err" id="errNombre">Ingresa tu nombre completo</span>
+          </div>
+          <div class="form-group">
+            <label for="cedula">Cédula de identidad <span>*</span></label>
+            <input type="text" id="cedula" placeholder="12345678">
+            <span class="err" id="errCedula">Ingresa tu cédula</span>
+          </div>
+          <div class="form-group">
+            <label for="correo">Correo electrónico <span>*</span></label>
+            <input type="email" id="correo" placeholder="tucorreo@gmail.com">
+            <span class="err" id="errCorreo">Ingresa un correo válido</span>
+          </div>
+          <div class="form-group full">
+            <label for="celular">Celular <span>*</span></label>
+            <div class="phone-row">
+              <select id="prefijo">
+                <option value="+591">+591 Bolivia</option>
+                <option value="+54">+54 Argentina</option>
+                <option value="+56">+56 Chile</option>
+                <option value="+51">+51 Perú</option>
+                <option value="+55">+55 Brasil</option>
+              </select>
+              <input type="tel" id="celular" placeholder="70000000">
+            </div>
+            <span class="err" id="errCelular">Ingresa tu número de celular</span>
+          </div>
+        </div>
+
+        <!-- QR YAPE -->
+        <div class="qr-section" id="qrSection" style="display:none; margin-top:1.5rem;">
+          <h3>Realiza tu pago por Yape</h3>
+          <p>Escanea el QR con tu app Yape y paga el monto exacto indicado</p>
+          <!--
+            INSTRUCCIÓN: Reemplaza el src de esta imagen con tu QR real.
+            Opciones:
+              1. Sube qr_yape.png al mismo servidor y usa: src="qr_yape.png"
+              2. Convierte tu QR a base64 y usa: src="data:image/png;base64,TU_BASE64"
+              3. Sube a imgur y usa la URL directa
+          -->
+          <img class="qr-img" src="qr_yape.png" id="qrImg" alt="QR Yape"
+               onerror="this.style.background='#1a2e20'; this.style.border='2px dashed #c9a84c';">
+          <div><span class="yape-label"> Yape — Kevin Jheferson Jimenez Quisbert</span></div>
+          <p class="qr-monto" id="qrMonto"></p>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">Enviar solicitud</button>
+      </form>
+
+      <div class="support-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <p>¿Tienes algún problema? Escríbenos a <a href="mailto:jimenezquisbertk@gmail.com">jimenezquisbertk@gmail.com</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="successScreen">
+    <div class="check-big">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    </div>
+    <h2>Solicitud enviada</h2>
+    <p>Hemos recibido tu pedido correctamente.</p>
+    <p>Pronto recibirás un <strong>correo electrónico</strong> y un <strong>mensaje de WhatsApp</strong> con la información de las propiedades seleccionadas.</p>
+    <p>Gracias por confiar en <strong>New View</strong>.</p>
+    <button class="reset-btn" id="resetBtn">Hacer otro pedido</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  CONFIGURACIÓN
+// ══════════════════════════════════════════════════════
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOlqWgOT5Dpgvs5dPNQ9ROweDmrLiV10EhGrBRKUzkB0qyi6U0-iTO3UlSy1GUTyeNHw/exec";
+const PRECIO = 5;
+
+// ══════════════════════════════════════════════════════
+//  DATOS DE CASAS  (código = C1..C15)
+// ══════════════════════════════════════════════════════
+const CASAS = [
+  { id: 1,  codigo: "C1",  nombre: "Residencia Chijini I",           zona: "Chijini",       img: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&q=80" },
+  { id: 2,  codigo: "C2",  nombre: "Casa Gran Poder",                zona: "Gran Poder",    img: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&q=80" },
+  { id: 3,  codigo: "C3",  nombre: "Villa San Pedro",                zona: "San Pedro",     img: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&q=80" },
+  { id: 4,  codigo: "C4",  nombre: "Casa El Tejar",                  zona: "El Tejar",      img: "https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=400&q=80" },
+  { id: 5,  codigo: "C5",  nombre: "Residencia Tembladerani",        zona: "Tembladerani",  img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&q=80" },
+  { id: 6,  codigo: "C6",  nombre: "Casa Cotahuma",                  zona: "Cotahuma",      img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80" },
+  { id: 7,  codigo: "C7",  nombre: "Suite Sopocachi",                zona: "Sopocachi",     img: "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=400&q=80" },
+  { id: 8,  codigo: "C8",  nombre: "Casa Casco Viejo",               zona: "Casco Viejo",   img: "https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=400&q=80" },
+  { id: 9,  codigo: "C9",  nombre: "Residencia Miraflores",          zona: "Miraflores",    img: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&q=80" },
+  { id: 10, codigo: "C10", nombre: "Penthouse San Jorge",            zona: "San Jorge",     img: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=400&q=80" },
+  { id: 11, codigo: "C11", nombre: "Casa Obrajes Norte",             zona: "Obrajes",       img: "https://images.unsplash.com/photo-1567496898669-ee935f5f647a?w=400&q=80" },
+  { id: 12, codigo: "C12", nombre: "Villa Calacoto",                 zona: "Calacoto",      img: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&q=80" },
+  { id: 13, codigo: "C13", nombre: "Casa San Miguel Premium",        zona: "San Miguel",    img: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400&q=80" },
+  { id: 14, codigo: "C14", nombre: "Residencia Achumani",            zona: "Achumani",      img: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=400&q=80" },
+  { id: 15, codigo: "C15", nombre: "Casa Cota Cota Universitaria",   zona: "Cota Cota",     img: "https://images.unsplash.com/photo-1449844908441-8829872d2607?w=400&q=80" }
+];
+
+// ══════════════════════════════════════════════════════
+//  ESTADO
+// ══════════════════════════════════════════════════════
+let selected = new Set(); // guarda IDs numéricos
+
+// ══════════════════════════════════════════════════════
+//  RENDER CASAS
+// ══════════════════════════════════════════════════════
+function renderCasas() {
+  const grid = document.getElementById('housesGrid');
+  grid.innerHTML = CASAS.map(c => `
+    <div class="house-card" id="card-${c.id}" onclick="toggleCasa(${c.id})">
+      <div class="check-badge">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <img class="house-img" src="${c.img}" alt="${c.nombre}" loading="lazy"
+           onerror="this.style.background='#1a2e20'">
+      <div class="house-info">
+        <div class="house-zone">${c.zona}</div>
+        <div class="house-name">${c.nombre}</div>
+        <div class="house-price">Información: <strong>Bs. ${PRECIO}</strong></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleCasa(id) {
+  const card = document.getElementById('card-' + id);
+  if (selected.has(id)) {
+    selected.delete(id);
+    card.classList.remove('selected');
+  } else {
+    selected.add(id);
+    card.classList.add('selected');
+  }
+  updateCounter();
+  updateSummary();
+}
+
+function clearAll() {
+  selected.forEach(id => document.getElementById('card-' + id).classList.remove('selected'));
+  selected.clear();
+  updateCounter();
+  updateSummary();
+}
+
+// ══════════════════════════════════════════════════════
+//  COUNTER + SUMMARY
+// ══════════════════════════════════════════════════════
+function updateCounter() {
+  const n     = selected.size;
+  const total = n * PRECIO;
+  const bar   = document.getElementById('counterBar');
+  bar.classList.toggle('hidden', n === 0);
+  document.getElementById('counterNum').textContent   = n;
+  document.getElementById('counterTotal').textContent = 'Total: Bs. ' + total;
+}
+
+function updateSummary() {
+  const summary = document.getElementById('selectedSummary');
+  const qrSec   = document.getElementById('qrSection');
+  const n       = selected.size;
+  const total   = n * PRECIO;
+
+  if (n === 0) {
+    summary.style.display = 'none';
+    qrSec.style.display   = 'none';
+    return;
+  }
+
+  summary.style.display = 'block';
+  qrSec.style.display   = 'block';
+
+  // Tags con nombre + código
+  const tags = document.getElementById('selectedTags');
+  tags.innerHTML = [...selected].map(id => {
+    const c = CASAS.find(x => x.id === id);
+    return `<span class="selected-tag">${c.codigo} — ${c.nombre}</span>`;
+  }).join('');
+
+  document.getElementById('totalAmount').textContent = 'Bs. ' + total;
+  document.getElementById('qrMonto').textContent     = 'Monto a pagar: Bs. ' + total;
+}
+
+// ══════════════════════════════════════════════════════
+//  VALIDACIÓN
+// ══════════════════════════════════════════════════════
+const FIELDS = {
+  nombre:  { v: v => v.trim().length >= 3,                        e: 'errNombre'  },
+  cedula:  { v: v => /^\d{6,12}$/.test(v.trim()),                 e: 'errCedula'  },
+  correo:  { v: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()), e: 'errCorreo'  },
+  celular: { v: v => /^\d{6,12}$/.test(v.trim()),                 e: 'errCelular' }
+};
+
+function validateField(k) {
+  const el  = document.getElementById(k);
+  const err = document.getElementById(FIELDS[k].e);
+  const ok  = FIELDS[k].v(el.value);
+  el.classList.toggle('error', !ok);
+  err.classList.toggle('show', !ok);
+  return ok;
+}
+
+// ══════════════════════════════════════════════════════
+//  SUBMIT
+// ══════════════════════════════════════════════════════
+async function handleSubmit(e) {
+  e.preventDefault();
+
+  // Validar campos
+  let formOk = true;
+  Object.keys(FIELDS).forEach(k => { if (!validateField(k)) formOk = false; });
+  if (!formOk) return;
+
+  // Validar selección
+  if (selected.size === 0) {
+    alert('Selecciona al menos una propiedad.');
+    return;
+  }
+
+  // Preparar datos
+  const selectedArray  = [...selected];
+  const casasCodigos   = selectedArray.map(id => CASAS.find(x => x.id === id).codigo).join(', ');
+  const casasNombres   = selectedArray.map(id => CASAS.find(x => x.id === id).nombre).join(', ');
+  const cantidadCasas  = selectedArray.length;
+  const total          = cantidadCasas * PRECIO;
+  const celularFull    = document.getElementById('prefijo').value + document.getElementById('celular').value.trim();
+
+  // Mostrar loading
+  const overlay = document.getElementById('loadingOverlay');
+  const btn     = document.getElementById('submitBtn');
+  overlay.classList.add('visible');
+  btn.disabled = true;
+
+  const payload = new FormData();
+  payload.append('nombre',        document.getElementById('nombre').value.trim());
+  payload.append('cedula',        document.getElementById('cedula').value.trim());
+  payload.append('correo',        document.getElementById('correo').value.trim());
+  payload.append('celular',       celularFull);
+  payload.append('casas',         casasCodigos);      // → Sheets columna G: "C1, C3, C5"
+  payload.append('casasNombres',  casasNombres);      // → WhatsApp y correo con nombres completos
+  payload.append('cantidadCasas', cantidadCasas);     // → Sheets columna L
+  payload.append('total',         total);             // → Sheets columna H
+
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: payload });
+    const txt = await res.text();
+
+    if (txt.includes('Error')) throw new Error(txt);
+
+    // Éxito
+    overlay.classList.remove('visible');
+    document.getElementById('formMain').classList.add('hidden');
+    document.getElementById('successScreen').classList.add('visible');
+    document.getElementById('counterBar').classList.add('hidden');
+
+  } catch (err) {
+    overlay.classList.remove('visible');
+    btn.disabled = false;
+    alert('Hubo un error al enviar tu solicitud. Por favor intenta nuevamente.\n\n' + err.message);
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  RESET
+// ══════════════════════════════════════════════════════
+function resetForm() {
+  clearAll();
+  Object.keys(FIELDS).forEach(k => {
+    const el = document.getElementById(k);
+    el.value = '';
+    el.classList.remove('error');
+    document.getElementById(FIELDS[k].e).classList.remove('show');
+  });
+  document.getElementById('prefijo').value = '+591';
+  document.getElementById('formMain').classList.remove('hidden');
+  document.getElementById('successScreen').classList.remove('visible');
+  document.getElementById('submitBtn').disabled = false;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ══════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  renderCasas();
+
+  // Limpiar errores en tiempo real
+  Object.keys(FIELDS).forEach(k => {
+    document.getElementById(k).addEventListener('input', () => {
+      if (document.getElementById(FIELDS[k].e).classList.contains('show')) {
+        validateField(k);
+      }
+    });
+  });
+
+  document.getElementById('mainForm').addEventListener('submit', handleSubmit);
+  document.getElementById('resetBtn').addEventListener('click', resetForm);
+});
+</script>
+</body>
+</html>
